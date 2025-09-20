@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Реєстрація та Логін</title>
+</head>
+<body>
+  <h2>Форма реєстрації</h2>
+  <form id="registerForm">
+    <input type="text" name="name" placeholder="Ім'я" required><br>
+    <input type="email" name="email" placeholder="Email" required><br>
+    <input type="password" name="password" placeholder="Пароль" required><br>
+    <button type="submit">Зареєструватися</button>
+  </form>
+  <p id="registerMessage"></p>
+
+  <h2>Форма логіну</h2>
+  <form id="loginForm">
+    <input type="email" name="email" placeholder="Email" required><br>
+    <input type="password" name="password" placeholder="Пароль" required><br>
+    <button type="submit">Увійти</button>
+  </form>
+  <p id="loginMessage"></p>
+
+  <script>
+    const registerForm = document.getElementById('registerForm');
+    const registerMessage = document.getElementById('registerMessage');
+    const loginForm = document.getElementById('loginForm');
+    const loginMessage = document.getElementById('loginMessage');
+
+    registerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(registerForm).entries());
+      try {
+        const res = await fetch('/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        const result = await res.json();
+        registerMessage.textContent = result.message;
+      } catch {
+        registerMessage.textContent = 'Помилка при реєстрації';
+      }
+    });
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(loginForm).entries());
+      try {
+        const res = await fetch('/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        const result = await res.json();
+        loginMessage.textContent = result.message;
+      } catch {
+        loginMessage.textContent = 'Помилка при вході';
+      }
+    });
+  </script>
+</body>
+</html>
